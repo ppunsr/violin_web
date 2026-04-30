@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="เข้าสู่ระบบนักเรียนสำหรับคอร์สไวโอลินออนไลน์"
+    >
+    <title>เข้าสู่ระบบนักเรียน | Private Violin School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Noto+Serif+Thai:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="styles.css?v=student-flow-10">
+  </head>
+  <body class="portal-page online-course-page student-login-page">
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="หน้าแรก Private Violin School">
+        <span class="brand-mark">V</span>
+        <span>
+          <span class="brand-name">Private Violin School</span>
+          <span class="brand-subtitle">Student Login</span>
+        </span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="main-nav" id="main-nav" aria-label="เมนูหลัก">
+        <a href="online-course.html">คอร์สออนไลน์</a>
+        <a href="index.html">หน้าแรก</a>
+        <a class="nav-cta" href="student-login.html">เข้าสู่ระบบ</a>
+      </nav>
+    </header>
+
+    <main class="course-marketplace">
+      <section class="student-login-shell" aria-labelledby="studentLoginTitle">
+        <div class="course-page-inner student-login-layout">
+          <div class="student-login-copy">
+            <p class="section-kicker">Student access</p>
+            <h1 id="studentLoginTitle">เข้าสู่ระบบนักเรียน</h1>
+            <p>
+              หน้านี้สำหรับนักเรียนที่ได้รับบัญชีหลังชำระเงินแล้ว เมื่อเข้าสู่ระบบสำเร็จ
+              ระบบจะพาไปยังพื้นที่นักเรียนพร้อมโปรไฟล์ รายการคอร์สที่ซื้อแล้ว และบทเรียนที่เข้าเรียนได้
+            </p>
+            <div class="simple-access-steps" aria-label="ขั้นตอนเข้าเรียน">
+              <article>
+                <span>01</span>
+                <strong>รับบัญชีหลังชำระเงิน</strong>
+              </article>
+              <article>
+                <span>02</span>
+                <strong>เข้าสู่ระบบ</strong>
+              </article>
+              <article>
+                <span>03</span>
+                <strong>ดูโปรไฟล์ คอร์สที่ซื้อแล้ว และเริ่มเรียน</strong>
+              </article>
+            </div>
+          </div>
+
+          <aside class="portal-card student-login-card" aria-label="ฟอร์มเข้าสู่ระบบนักเรียน">
+            <p class="section-kicker">บัญชีนักเรียน</p>
+            <h2>Login</h2>
+            <p>กรอกอีเมลและรหัสผ่านที่ได้รับเพื่อเข้าหน้าคอร์สเรียน</p>
+
+            <div class="demo-login-box" aria-label="บัญชี demo สำหรับ preview">
+              <span>บัญชี preview</span>
+              <strong>student@ohmviolin.com</strong>
+              <small>รหัสผ่าน: violin2026</small>
+              <button class="demo-fill-button" type="button" data-demo-email="student@ohmviolin.com" data-demo-password="violin2026">
+                กรอกบัญชี preview
+              </button>
+            </div>
+
+            <form class="portal-login" id="portalLogin" data-redirect="student-course.html">
+              <label>
+                อีเมล
+                <input type="email" name="email" autocomplete="email" required>
+              </label>
+              <label>
+                รหัสผ่าน
+                <input type="password" name="password" autocomplete="current-password" required>
+              </label>
+              <button class="button button-dark form-submit" type="submit">เข้าสู่ระบบ</button>
+              <p class="form-status" id="portalStatus" role="status" aria-live="polite"></p>
+            </form>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js?v=student-flow-10"></script>
+  </body>
+</html>

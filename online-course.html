@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="หน้าแนะนำคอร์สไวโอลินออนไลน์ พร้อมหมวดคอร์ส รายละเอียดบทเรียน และทางเข้าสู่ระบบนักเรียน"
+    >
+    <title>คอร์สวิดีโอออนไลน์ | Private Violin School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Noto+Serif+Thai:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="styles.css?v=student-flow-10">
+  </head>
+  <body class="portal-page online-course-page">
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="หน้าแรก Private Violin School">
+        <span class="brand-mark">V</span>
+        <span>
+          <span class="brand-name">Private Violin School</span>
+          <span class="brand-subtitle">คอร์สออนไลน์</span>
+        </span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="main-nav" id="main-nav" aria-label="เมนูหลัก">
+        <a href="index.html">หน้าแรก</a>
+        <a href="#onlineCourseGrid">คอร์สออนไลน์</a>
+        <a href="#course-detail">รายละเอียดคอร์ส</a>
+        <a class="nav-cta" href="student-login.html">เข้าสู่ระบบนักเรียน</a>
+      </nav>
+    </header>
+
+    <main class="course-marketplace">
+      <section class="course-catalog-hero" aria-labelledby="courseCatalogTitle">
+        <div class="course-page-inner">
+          <p class="section-kicker">Online violin academy</p>
+          <h1 id="courseCatalogTitle">คอร์สเรียนออนไลน์</h1>
+          <p>
+            เลือกเส้นทางเรียนไวโอลินแบบเป็นระบบ ดูรายละเอียดบทเรียน
+            และเข้าสู่พื้นที่นักเรียนหลังชำระเงิน
+          </p>
+        </div>
+      </section>
+
+      <section class="course-catalog" aria-label="ค้นหาและเลือกคอร์สออนไลน์">
+        <div class="course-page-inner">
+          <div class="course-chip-row" aria-label="หมวดหมู่คอร์ส">
+            <button class="course-chip-arrow" type="button" data-chip-scroll="-1" aria-label="เลื่อนหมวดหมู่ไปทางซ้าย">‹</button>
+            <div class="course-chip-track" id="courseChipTrack">
+              <button class="course-filter is-active" type="button" data-course-filter="all">คอร์สเรียนทั้งหมด</button>
+              <button class="course-filter" type="button" data-course-filter="recommended">คอร์สเรียนแนะนำ</button>
+              <button class="course-filter" type="button" data-course-filter="foundation">พื้นฐานไวโอลิน</button>
+              <button class="course-filter" type="button" data-course-filter="tone">น้ำเสียงและคันชัก</button>
+              <button class="course-filter" type="button" data-course-filter="practice">ระบบซ้อม</button>
+              <button class="course-filter" type="button" data-course-filter="performance">เตรียมตัวแสดง</button>
+            </div>
+            <button class="course-chip-arrow" type="button" data-chip-scroll="1" aria-label="เลื่อนหมวดหมู่ไปทางขวา">›</button>
+          </div>
+
+          <label class="course-search">
+            <span>ค้นหาคอร์สเรียน</span>
+            <input id="courseSearch" type="search" placeholder="ค้นหาคอร์สเรียน เช่น พื้นฐาน คันชัก การซ้อม" autocomplete="off">
+          </label>
+
+          <div class="course-section-heading">
+            <div>
+              <p class="section-kicker">คอร์สเรียนแนะนำ</p>
+              <h2>เริ่มจากคอร์สที่เหมาะกับเป้าหมายของนักเรียน</h2>
+            </div>
+            <a href="student-login.html">เข้าสู่ระบบนักเรียน</a>
+          </div>
+
+          <div class="course-carousel" aria-label="เลือกคอร์สออนไลน์">
+            <button class="course-carousel-button" type="button" data-course-carousel="-1" aria-label="เลื่อนคอร์สไปทางซ้าย">‹</button>
+
+            <div class="online-course-grid" id="onlineCourseGrid" data-course-carousel-track tabindex="0">
+              <article
+                class="online-course-card"
+                data-course-card
+                data-course-key="foundation"
+                data-category="recommended foundation practice"
+                data-title="คอร์สไวโอลินพื้นฐาน 21 วัน"
+                data-summary="เริ่มจากศูนย์ จัดท่าทาง จับคันชัก ฝึกเสียง และวาง routine ซ้อมแบบเข้าใจง่าย"
+              >
+                <img src="assets/hero-violin-school.png" alt="ภาพบรรยากาศคอร์สไวโอลินพื้นฐาน">
+                <div class="online-course-card-copy">
+                  <span>พร้อมสำหรับนักเรียน</span>
+                  <h3>คอร์สไวโอลินพื้นฐาน 21 วัน</h3>
+                  <p>เริ่มจากศูนย์ จัดท่าทาง จับคันชัก ฝึกเสียง และวาง routine ซ้อมแบบเข้าใจง่าย</p>
+                  <div class="course-meta-line">
+                    <small>3 Lesson · 8 คลิป</small>
+                    <small>Vimeo course</small>
+                  </div>
+                  <div class="online-card-actions">
+                    <a class="button button-outline-green" href="#course-detail" data-course-detail-trigger>อ่านรายละเอียด</a>
+                    <a class="button button-green" href="student-login.html">เข้าสู่ระบบ</a>
+                  </div>
+                </div>
+              </article>
+
+              <article
+                class="online-course-card"
+                data-course-card
+                data-course-key="tone"
+                data-category="recommended tone"
+                data-title="Tone Lab เสียงสวยและคันชักนิ่ง"
+                data-summary="ฝึกน้ำหนักมือขวา จุดสัมผัสคันชัก ความเร็วคันชัก และการฟังเสียงให้สะอาด"
+              >
+                <img src="assets/gallery/learning-atmosphere-02.png" alt="ภาพนักเรียนฝึกคันชักในคลาสไวโอลิน">
+                <div class="online-course-card-copy">
+                  <span>กำลังจัดทำ</span>
+                  <h3>Tone Lab เสียงสวยและคันชักนิ่ง</h3>
+                  <p>ฝึกน้ำหนักมือขวา จุดสัมผัสคันชัก ความเร็วคันชัก และการฟังเสียงให้สะอาด</p>
+                  <div class="course-meta-line">
+                    <small>6 บทเรียน</small>
+                    <small>Coming soon</small>
+                  </div>
+                  <div class="online-card-actions">
+                    <a class="button button-outline-green" href="#course-detail" data-course-detail-trigger>อ่านรายละเอียด</a>
+                    <a class="button button-green" href="student-login.html">เข้าสู่ระบบ</a>
+                  </div>
+                </div>
+              </article>
+
+              <article
+                class="online-course-card"
+                data-course-card
+                data-course-key="practice"
+                data-category="practice"
+                data-title="Practice System ซ้อมให้เห็นผล"
+                data-summary="จัดตารางซ้อม แยกปัญหาเป็นชิ้นเล็ก ใช้ recording feedback และ checklist รายสัปดาห์"
+              >
+                <img src="assets/gallery/learning-atmosphere-04.png" alt="ภาพบรรยากาศการซ้อมไวโอลิน">
+                <div class="online-course-card-copy">
+                  <span>กำลังจัดทำ</span>
+                  <h3>Practice System ซ้อมให้เห็นผล</h3>
+                  <p>จัดตารางซ้อม แยกปัญหาเป็นชิ้นเล็ก ใช้ recording feedback และ checklist รายสัปดาห์</p>
+                  <div class="course-meta-line">
+                    <small>5 บทเรียน</small>
+                    <small>Coming soon</small>
+                  </div>
+                  <div class="online-card-actions">
+                    <a class="button button-outline-green" href="#course-detail" data-course-detail-trigger>อ่านรายละเอียด</a>
+                    <a class="button button-green" href="student-login.html">เข้าสู่ระบบ</a>
+                  </div>
+                </div>
+              </article>
+
+              <article
+                class="online-course-card"
+                data-course-card
+                data-course-key="performance"
+                data-category="performance recommended"
+                data-title="Performance Prep เตรียมตัวแสดง"
+                data-summary="เตรียมเพลงก่อนขึ้นเวทีหรืออัดวิดีโอ คุมความตื่นเต้น และทำ checklist ก่อนแสดง"
+              >
+                <img src="assets/gallery/learning-atmosphere-06.png" alt="ภาพบรรยากาศการแสดงและการเรียนไวโอลิน">
+                <div class="online-course-card-copy">
+                  <span>กำลังจัดทำ</span>
+                  <h3>Performance Prep เตรียมตัวแสดง</h3>
+                  <p>เตรียมเพลงก่อนขึ้นเวทีหรืออัดวิดีโอ คุมความตื่นเต้น และทำ checklist ก่อนแสดง</p>
+                  <div class="course-meta-line">
+                    <small>4 บทเรียน</small>
+                    <small>Coming soon</small>
+                  </div>
+                  <div class="online-card-actions">
+                    <a class="button button-outline-green" href="#course-detail" data-course-detail-trigger>อ่านรายละเอียด</a>
+                    <a class="button button-green" href="student-login.html">เข้าสู่ระบบ</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <button class="course-carousel-button" type="button" data-course-carousel="1" aria-label="เลื่อนคอร์สไปทางขวา">›</button>
+          </div>
+
+          <p class="course-result-status" id="courseResultStatus" role="status" aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="course-detail-section" id="course-detail" aria-labelledby="courseDetailTitle">
+        <div class="course-page-inner course-detail-grid">
+          <div class="course-detail-copy">
+            <p class="section-kicker">รายละเอียดคอร์ส</p>
+            <h2 id="courseDetailTitle">คอร์สไวโอลินพื้นฐาน 21 วัน</h2>
+            <p id="courseDetailDescription">
+              โครงสร้างคอร์สออกแบบให้เรียนง่าย เห็นลำดับชัด และเหมาะกับนักเรียนที่ต้องการเริ่มอย่างถูกวิธี
+              ก่อนต่อยอดไปคอร์สส่วนตัวหรือคลาสสตูดิโอ
+            </p>
+            <div class="course-detail-actions">
+              <a class="button button-green" href="student-login.html">เข้าสู่ระบบนักเรียน</a>
+              <a class="button button-outline-green" href="#onlineCourseGrid">กลับไปเลือกคอร์ส</a>
+            </div>
+          </div>
+
+          <div class="course-summary-card">
+            <span id="courseStatusLabel">สถานะคอร์ส</span>
+            <strong id="courseStatusTitle">พร้อมสำหรับนักเรียนที่มีบัญชี</strong>
+            <p id="courseStatusText">ระบบจริงสามารถต่อ payment gateway และ Vimeo privacy ภายหลังได้</p>
+          </div>
+        </div>
+
+        <div class="course-page-inner lesson-outline-panel">
+          <h3 id="lessonOutlineTitle">บทเรียน คอร์สไวโอลินพื้นฐาน 21 วัน</h3>
+          <div id="lessonOutlineModules"></div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <a class="brand footer-brand" href="index.html">
+          <span class="brand-mark">V</span>
+          <span>
+            <span class="brand-name">Private Violin School</span>
+            <span class="brand-subtitle">สอนด้วยมาตรฐานนักแสดง</span>
+          </span>
+        </a>
+        <p>คอร์สส่วนตัวเป็นหัวใจหลัก และคอร์สออนไลน์คือเส้นทางต่อยอดในอนาคต</p>
+      </div>
+    </footer>
+
+    <script src="script.js?v=student-flow-10"></script>
+  </body>
+</html>
