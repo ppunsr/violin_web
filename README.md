@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # เว็บไซต์ Private Violin School
 
 เปิด `index.html` เพื่อดูหน้าเว็บไซต์หลัก และเปิด `online-course.html` เพื่อดูหน้าแผนคอร์สออนไลน์
@@ -46,3 +47,6 @@
 - ตัว iframe จะเริ่มเป็น `about:blank` และโหลด Vimeo หลังนักเรียนที่มีสถานะ paid login สำเร็จ
 - สำหรับคอร์สเสียเงินจริง แนะนำใช้ Vimeo privacy แบบจำกัดโดเมนเว็บไซต์ และใช้ระบบ backend ตรวจสิทธิ์นักเรียนก่อนแสดงบทเรียน
 - Prototype นี้จำลองสถานะจ่ายเงินด้วย JavaScript/localStorage เท่านั้น ยังไม่ใช่ระบบป้องกันวิดีโอสำหรับ production
+=======
+# violin_web
+>>>>>>> 3dc407ab3d67a4b0ab21c9e04eab4cc4fa397582
