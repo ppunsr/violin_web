@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Noto+Serif+Thai:wght@600;700&display=swap"
       rel="stylesheet"
     >
-    <link rel="stylesheet" href="styles.css?v=student-flow-10">
+    <link rel="stylesheet" href="styles.css?v=supabase-schedule-2">
   </head>
   <body>
     <header class="site-header">
@@ -334,33 +334,11 @@
 
               <div class="availability-calendar" id="availabilityCalendar" aria-label="ปฏิทินเวลาว่างรายเดือน"></div>
 
-              <details class="schedule-manager">
-                <summary>จัดการตารางครู</summary>
-                <div class="schedule-manager-panel">
-                  <label class="schedule-manager-date">
-                    วันที่
-                    <input type="date" id="scheduleManageDate">
-                  </label>
+              <p class="schedule-connection-status" id="scheduleConnectionStatus" role="status" aria-live="polite">
+                ใช้ตารางตัวอย่างระหว่างกำลังเชื่อมต่อระบบ
+              </p>
 
-                  <div class="schedule-status-toggle" aria-label="สถานะของวัน">
-                    <button class="is-active" type="button" data-schedule-status="open">ว่าง</button>
-                    <button type="button" data-schedule-status="full">เต็ม</button>
-                  </div>
-
-                  <div class="hourly-slot-picker" id="hourlySlotPicker" aria-label="เลือกช่วงเวลา 1 ชั่วโมง"></div>
-
-                  <label class="custom-slot-field">
-                    ช่วงเวลาพิเศษ
-                    <input type="text" id="customSlotInput" placeholder="13:15-14:15">
-                  </label>
-
-                  <div class="schedule-manager-actions">
-                    <button class="button button-primary" type="button" id="scheduleSaveButton">บันทึกตาราง</button>
-                    <button class="button button-ghost-light" type="button" id="scheduleResetButton">ใช้ค่าเริ่มต้น</button>
-                  </div>
-                  <p class="schedule-manager-status" id="scheduleManagerStatus" role="status" aria-live="polite"></p>
-                </div>
-              </details>
+              <a class="teacher-admin-link" href="teacher-login.html">สำหรับครู: เข้าหน้าจัดการตาราง</a>
             </div>
           </div>
         </div>
@@ -511,6 +489,7 @@
       </div>
     </footer>
 
-    <script src="script.js?v=student-flow-10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js?v=supabase-schedule-2"></script>
   </body>
 </html>

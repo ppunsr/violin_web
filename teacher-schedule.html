@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="หน้าจัดการตารางเวลาครูสำหรับ Private Violin School"
+    >
+    <title>จัดการตารางครู | Private Violin School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Noto+Serif+Thai:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="styles.css?v=supabase-schedule-2">
+  </head>
+  <body class="portal-page teacher-admin-page teacher-schedule-page">
+    <header class="site-header">
+      <a class="brand" href="teacher-schedule.html" aria-label="Teacher Admin">
+        <span class="brand-mark">V</span>
+        <span>
+          <span class="brand-name">Private Violin School</span>
+          <span class="brand-subtitle">Schedule Admin</span>
+        </span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="main-nav" id="main-nav" aria-label="เมนูหลัก">
+        <a href="index.html#schedule">ดูหน้าสาธารณะ</a>
+        <a href="teacher-login.html">Teacher login</a>
+        <button class="nav-cta nav-button" type="button" id="teacherLogoutButton" data-logout-redirect="teacher-login.html">ออกจากระบบ</button>
+      </nav>
+    </header>
+
+    <main class="teacher-admin-main teacher-schedule-main">
+      <section class="teacher-admin-hero" aria-labelledby="teacherScheduleTitle">
+        <div class="course-page-inner teacher-admin-hero-inner">
+          <div>
+            <p class="section-kicker">Schedule admin</p>
+            <h1 id="teacherScheduleTitle">จัดการตารางเวลาครู</h1>
+            <p>
+              เลือกวันจากปฏิทิน ตั้งสถานะว่างหรือเต็ม และกำหนดช่วงเวลาเป็นรายชั่วโมง
+              ระบบจะบันทึกลง Supabase แล้วส่งผลไปยังหน้าเว็บไซต์หลัก
+            </p>
+          </div>
+
+          <div class="teacher-session-bar" id="teacherSessionBar" hidden>
+            <span id="teacherSessionText">เข้าสู่ระบบครูแล้ว</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section teacher-schedule-workspace" aria-label="พื้นที่จัดการตาราง">
+        <div class="section-inner">
+          <p class="schedule-connection-status" id="scheduleConnectionStatus" role="status" aria-live="polite">
+            ใช้ตารางตัวอย่างระหว่างกำลังเชื่อมต่อระบบ
+          </p>
+
+          <div class="teacher-auth-card teacher-inline-login" id="teacherAuthCard">
+            <div>
+              <p class="section-kicker">Teacher login</p>
+              <strong>เข้าสู่ระบบก่อนแก้ตาราง</strong>
+              <p>ถ้ายังไม่ได้ login ระบบจะให้ดูตารางได้ แต่ปุ่มบันทึกจะถูกล็อกไว้</p>
+            </div>
+            <label>
+              อีเมลครู
+              <input type="email" id="teacherLoginEmail" autocomplete="email" placeholder="teacher@email.com">
+            </label>
+            <label>
+              รหัสผ่าน
+              <input type="password" id="teacherLoginPassword" autocomplete="current-password" placeholder="รหัสผ่าน">
+            </label>
+            <button class="button button-primary" type="button" id="teacherLoginButton">เข้าสู่ระบบครู</button>
+            <p class="teacher-auth-status" id="teacherAuthStatus" role="status" aria-live="polite"></p>
+          </div>
+
+          <div class="teacher-admin-grid">
+            <aside class="today-availability-card teacher-selected-day-card" aria-labelledby="todayAvailabilityTitle">
+              <p class="section-kicker">วันที่เลือก</p>
+              <h3 id="todayAvailabilityTitle">ช่วงเวลาปัจจุบัน</h3>
+              <p id="todayAvailabilityDate">-</p>
+              <div class="today-slot-list" id="todaySlotList"></div>
+              <p class="selected-slot-note" id="selectedSlotNote">เลือกวันจากปฏิทินเพื่อแก้ไขตาราง</p>
+            </aside>
+
+            <div class="month-availability-card">
+              <div class="schedule-toolbar">
+                <button class="schedule-nav-button" type="button" data-schedule-month="-1" aria-label="ดูเดือนก่อนหน้า">‹</button>
+                <div>
+                  <p class="section-kicker">Monthly availability</p>
+                  <h3 id="scheduleMonthLabel">-</h3>
+                </div>
+                <button class="schedule-nav-button" type="button" data-schedule-month="1" aria-label="ดูเดือนถัดไป">›</button>
+              </div>
+
+              <div class="schedule-legend" aria-label="คำอธิบายสีตารางเวลา">
+                <span><i class="is-available"></i> ว่าง</span>
+                <span><i class="is-full"></i> เต็ม</span>
+              </div>
+
+              <div class="availability-calendar" id="availabilityCalendar" aria-label="ปฏิทินเวลาว่างรายเดือน"></div>
+            </div>
+          </div>
+
+          <section class="teacher-admin-edit-card schedule-manager" aria-labelledby="scheduleManagerTitle">
+            <div>
+              <p class="section-kicker">Update availability</p>
+              <h2 id="scheduleManagerTitle">ตั้งค่าวันที่เลือก</h2>
+              <p>
+                ค่าเริ่มต้นใช้ช่วงเวลา 1 ชั่วโมง ถ้ามีเวลาพิเศษ เช่น 13:15-14:15
+                ให้ใส่ในช่องช่วงเวลาพิเศษแล้วคั่นหลายช่วงด้วย comma
+              </p>
+            </div>
+
+            <div class="schedule-manager-panel">
+              <label class="schedule-manager-date">
+                วันที่
+                <input type="date" id="scheduleManageDate">
+              </label>
+
+              <div class="schedule-status-toggle" aria-label="สถานะของวัน">
+                <button class="is-active" type="button" data-schedule-status="open">ว่าง</button>
+                <button type="button" data-schedule-status="full">เต็ม</button>
+              </div>
+
+              <div class="hourly-slot-picker" id="hourlySlotPicker" aria-label="เลือกช่วงเวลา 1 ชั่วโมง"></div>
+
+              <label class="custom-slot-field">
+                ช่วงเวลาพิเศษ
+                <input type="text" id="customSlotInput" placeholder="13:15-14:15">
+              </label>
+
+              <div class="schedule-manager-actions">
+                <button class="button button-primary" type="button" id="scheduleSaveButton">บันทึกตาราง</button>
+                <button class="button button-ghost-light" type="button" id="scheduleResetButton">ใช้ค่าเริ่มต้น</button>
+              </div>
+              <p class="schedule-manager-status" id="scheduleManagerStatus" role="status" aria-live="polite"></p>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js?v=supabase-schedule-2"></script>
+  </body>
+</html>

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="เข้าสู่ระบบครูเพื่อจัดการตารางเวลาสอน Private Violin School"
+    >
+    <title>เข้าสู่ระบบครู | Private Violin School</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Noto+Serif+Thai:wght@600;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="styles.css?v=supabase-schedule-2">
+  </head>
+  <body class="portal-page teacher-admin-page teacher-login-page">
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="หน้าแรก Private Violin School">
+        <span class="brand-mark">V</span>
+        <span>
+          <span class="brand-name">Private Violin School</span>
+          <span class="brand-subtitle">Teacher Admin</span>
+        </span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="main-nav" id="main-nav" aria-label="เมนูหลัก">
+        <a href="index.html#schedule">ดูตารางหน้าเว็บ</a>
+        <a href="teacher-schedule.html">จัดการตาราง</a>
+        <a class="nav-cta" href="index.html">หน้าแรก</a>
+      </nav>
+    </header>
+
+    <main class="teacher-admin-main">
+      <section class="teacher-login-shell" aria-labelledby="teacherLoginTitle">
+        <div class="course-page-inner teacher-login-layout">
+          <div class="teacher-login-copy">
+            <p class="section-kicker">Teacher admin</p>
+            <h1 id="teacherLoginTitle">เข้าสู่ระบบครู</h1>
+            <p>
+              ใช้บัญชีครูจาก Supabase เพื่อเข้าไปอัปเดตวันว่าง วันเต็ม และช่วงเวลาเรียน
+              ข้อมูลที่บันทึกจะไปแสดงในหน้าเว็บไซต์สำหรับนักเรียนทันที
+            </p>
+            <div class="teacher-admin-notes" aria-label="สิ่งที่จัดการได้">
+              <article>
+                <span>01</span>
+                <strong>เลือกวัน</strong>
+                <p>ดูทั้งเดือนและเลือกวันที่ต้องการแก้ไข</p>
+              </article>
+              <article>
+                <span>02</span>
+                <strong>ตั้งสถานะ</strong>
+                <p>กำหนดว่าวันนั้นว่างหรือเต็ม</p>
+              </article>
+              <article>
+                <span>03</span>
+                <strong>บันทึกจริง</strong>
+                <p>บันทึกลง Supabase สำหรับทุกเครื่อง</p>
+              </article>
+            </div>
+          </div>
+
+          <aside class="teacher-login-card" aria-label="ฟอร์มเข้าสู่ระบบครู">
+            <div class="teacher-auth-card teacher-auth-card-standalone" id="teacherAuthCard">
+              <div>
+                <p class="section-kicker">Secure access</p>
+                <strong>เข้าสู่ระบบเพื่อจัดการตาราง</strong>
+                <p>กรอกอีเมลและรหัสผ่านของครูที่สร้างไว้ใน Supabase</p>
+              </div>
+              <label>
+                อีเมลครู
+                <input type="email" id="teacherLoginEmail" autocomplete="email" placeholder="teacher@email.com">
+              </label>
+              <label>
+                รหัสผ่าน
+                <input type="password" id="teacherLoginPassword" autocomplete="current-password" placeholder="รหัสผ่าน">
+              </label>
+              <button
+                class="button button-primary"
+                type="button"
+                id="teacherLoginButton"
+                data-login-redirect="teacher-schedule.html"
+              >
+                เข้าสู่ระบบครู
+              </button>
+              <p class="teacher-auth-status" id="teacherAuthStatus" role="status" aria-live="polite"></p>
+            </div>
+
+            <div class="teacher-session-bar teacher-session-bar-standalone" id="teacherSessionBar" hidden>
+              <span id="teacherSessionText">เข้าสู่ระบบครูแล้ว</span>
+              <a class="button button-primary" href="teacher-schedule.html">ไปจัดการตาราง</a>
+              <button class="button button-ghost-light" type="button" id="teacherLogoutButton" data-logout-redirect="teacher-login.html">ออกจากระบบ</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="script.js?v=supabase-schedule-2"></script>
+  </body>
+</html>

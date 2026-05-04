@@ -137,7 +137,19 @@ const customSlotInput = document.getElementById("customSlotInput");
 const scheduleSaveButton = document.getElementById("scheduleSaveButton");
 const scheduleResetButton = document.getElementById("scheduleResetButton");
 const scheduleManagerStatus = document.getElementById("scheduleManagerStatus");
+const scheduleConnectionStatus = document.getElementById("scheduleConnectionStatus");
+const teacherAuthCard = document.getElementById("teacherAuthCard");
+const teacherLoginEmail = document.getElementById("teacherLoginEmail");
+const teacherLoginPassword = document.getElementById("teacherLoginPassword");
+const teacherLoginButton = document.getElementById("teacherLoginButton");
+const teacherLogoutButton = document.getElementById("teacherLogoutButton");
+const teacherAuthStatus = document.getElementById("teacherAuthStatus");
+const teacherSessionBar = document.getElementById("teacherSessionBar");
+const teacherSessionText = document.getElementById("teacherSessionText");
 
+const SUPABASE_URL = "https://zouaheonywnpygxageyl.supabase.co";
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpvdWFoZW9ueXducHlneGFnZXlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyOTcxNjgsImV4cCI6MjA5Mjg3MzE2OH0.Tf_NJG32h2gC2LvJK5eT3gse6B1rdsK84EeYbnzQgQQ";
 const SCHEDULE_STORAGE_KEY = "violinTeacherScheduleOverrides";
 const hourlySlotOptions = [
   "10:00-11:00",
@@ -183,10 +195,17 @@ const thaiFullDateFormatter = new Intl.DateTimeFormat("th-TH", {
   year: "numeric"
 });
 
+const supabaseClient = window.supabase?.createClient
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+
 let visibleScheduleMonth = new Date();
 let selectedScheduleDate = new Date();
 let selectedScheduleSlot = "";
 let teacherScheduleOverrides = loadTeacherScheduleOverrides();
+let teacherAuthSession = null;
+let teacherProfile = null;
+let scheduleUsesSupabase = false;
 
 function formatDateKey(date) {
   const year = date.getFullYear();
@@ -208,14 +227,18 @@ function normalizeScheduleSlots(slots) {
 }
 
 function loadTeacherScheduleOverrides() {
+  return {
+    ...teacherDateOverrides,
+    ...loadStoredTeacherScheduleOverrides()
+  };
+}
+
+function loadStoredTeacherScheduleOverrides() {
   try {
     const savedOverrides = JSON.parse(window.localStorage.getItem(SCHEDULE_STORAGE_KEY) || "{}");
-    return {
-      ...teacherDateOverrides,
-      ...(savedOverrides && typeof savedOverrides === "object" ? savedOverrides : {})
-    };
+    return savedOverrides && typeof savedOverrides === "object" ? savedOverrides : {};
   } catch {
-    return { ...teacherDateOverrides };
+    return {};
   }
 }
 
@@ -226,6 +249,185 @@ function saveTeacherScheduleOverrides() {
   } catch {
     return false;
   }
+}
+
+function setScheduleConnectionStatus(message, tone = "warning") {
+  if (!scheduleConnectionStatus) {
+    return;
+  }
+
+  scheduleConnectionStatus.textContent = message;
+  scheduleConnectionStatus.classList.toggle("is-connected", tone === "connected");
+  scheduleConnectionStatus.classList.toggle("is-warning", tone === "warning");
+  scheduleConnectionStatus.classList.toggle("is-error", tone === "error");
+}
+
+function updateTeacherAuthStatus(message = "") {
+  if (teacherAuthStatus) {
+    teacherAuthStatus.textContent = message;
+  }
+}
+
+function scheduleRowToOverride(row) {
+  return {
+    status: row.status === "full" ? "full" : "open",
+    slots: normalizeScheduleSlots(Array.isArray(row.slots) ? row.slots : [])
+  };
+}
+
+function applyRemoteScheduleRows(rows = []) {
+  const remoteOverrides = rows.reduce((overrides, row) => {
+    if (row.date) {
+      overrides[row.date] = scheduleRowToOverride(row);
+    }
+    return overrides;
+  }, {});
+
+  teacherScheduleOverrides = {
+    ...teacherDateOverrides,
+    ...remoteOverrides
+  };
+}
+
+async function loadSupabaseSchedule() {
+  if (!supabaseClient || !availabilityCalendar) {
+    return false;
+  }
+
+  setScheduleConnectionStatus("กำลังโหลดตารางเวลาจาก Supabase...", "warning");
+  const { data, error } = await supabaseClient
+    .from("teacher_availability")
+    .select("date,status,slots")
+    .order("date", { ascending: true });
+
+  if (error) {
+    throw error;
+  }
+
+  applyRemoteScheduleRows(data || []);
+  scheduleUsesSupabase = true;
+  setScheduleConnectionStatus("เชื่อมต่อ Supabase แล้ว ตารางนี้อ่านข้อมูลจากฐานข้อมูลจริง", "connected");
+  return true;
+}
+
+async function loadTeacherProfile(session) {
+  if (!supabaseClient || !session?.user?.id) {
+    teacherProfile = null;
+    return null;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("profiles")
+    .select("display_name,role")
+    .eq("id", session.user.id)
+    .maybeSingle();
+
+  if (error) {
+    teacherProfile = null;
+    updateTeacherAuthStatus("เข้าสู่ระบบแล้ว แต่ยังตรวจสิทธิ์ครูไม่ได้ ถ้าบันทึกไม่ผ่านให้เช็ก policy ของ profiles");
+    return null;
+  }
+
+  teacherProfile = data;
+  return data;
+}
+
+function renderTeacherAuthState() {
+  const isSignedIn = Boolean(teacherAuthSession?.user);
+  const displayName = teacherProfile?.display_name || teacherAuthSession?.user?.email || "ครู";
+
+  if (teacherAuthCard) {
+    teacherAuthCard.hidden = isSignedIn;
+  }
+
+  if (teacherSessionBar) {
+    teacherSessionBar.hidden = !isSignedIn;
+  }
+
+  if (teacherSessionText && isSignedIn) {
+    const roleText = teacherProfile?.role === "teacher" ? "พร้อมแก้ตาราง" : "รอตรวจสิทธิ์ครู";
+    teacherSessionText.textContent = `เข้าสู่ระบบ: ${displayName} (${roleText})`;
+  }
+
+  updateScheduleManagerDisabledState();
+}
+
+function maybeRedirectTeacherAfterLogin() {
+  const redirect = teacherLoginButton?.dataset.loginRedirect;
+
+  if (redirect && teacherAuthSession?.user && teacherProfile?.role === "teacher") {
+    window.location.href = redirect;
+  }
+}
+
+async function refreshTeacherSession() {
+  if (!supabaseClient) {
+    renderTeacherAuthState();
+    return;
+  }
+
+  const { data } = await supabaseClient.auth.getSession();
+  teacherAuthSession = data.session;
+
+  if (teacherAuthSession) {
+    await loadTeacherProfile(teacherAuthSession);
+  } else {
+    teacherProfile = null;
+  }
+
+  renderTeacherAuthState();
+}
+
+function canSaveScheduleToSupabase() {
+  return Boolean(supabaseClient && teacherAuthSession?.user && teacherProfile?.role === "teacher");
+}
+
+async function saveScheduleOverride(dateKey, override) {
+  teacherScheduleOverrides[dateKey] = override;
+
+  if (canSaveScheduleToSupabase()) {
+    const { error } = await supabaseClient
+      .from("teacher_availability")
+      .upsert(
+        {
+          date: dateKey,
+          status: override.status,
+          slots: override.slots || [],
+          updated_by: teacherAuthSession.user.id,
+          updated_at: new Date().toISOString()
+        },
+        { onConflict: "date" }
+      );
+
+    if (error) {
+      throw error;
+    }
+
+    scheduleUsesSupabase = true;
+    return "supabase";
+  }
+
+  return saveTeacherScheduleOverrides() ? "local" : "memory";
+}
+
+async function resetScheduleOverride(dateKey) {
+  delete teacherScheduleOverrides[dateKey];
+
+  if (canSaveScheduleToSupabase()) {
+    const { error } = await supabaseClient
+      .from("teacher_availability")
+      .delete()
+      .eq("date", dateKey);
+
+    if (error) {
+      throw error;
+    }
+
+    scheduleUsesSupabase = true;
+    return "supabase";
+  }
+
+  return saveTeacherScheduleOverrides() ? "local" : "memory";
 }
 
 function getAvailableSlotsForDate(date) {
@@ -247,18 +449,39 @@ function getScheduleStatus() {
   return scheduleStatusButtons.find((button) => button.classList.contains("is-active"))?.dataset.scheduleStatus || "open";
 }
 
+function isScheduleEditorLocked() {
+  return Boolean(supabaseClient && !canSaveScheduleToSupabase());
+}
+
 function updateScheduleManagerDisabledState() {
   const isFull = getScheduleStatus() === "full";
+  const isLocked = isScheduleEditorLocked();
+
+  if (scheduleManageDate) {
+    scheduleManageDate.disabled = isLocked;
+  }
+
+  scheduleStatusButtons.forEach((button) => {
+    button.disabled = isLocked;
+  });
 
   if (hourlySlotPicker) {
-    hourlySlotPicker.classList.toggle("is-disabled", isFull);
+    hourlySlotPicker.classList.toggle("is-disabled", isFull || isLocked);
     hourlySlotPicker.querySelectorAll("input").forEach((input) => {
-      input.disabled = isFull;
+      input.disabled = isFull || isLocked;
     });
   }
 
   if (customSlotInput) {
-    customSlotInput.disabled = isFull;
+    customSlotInput.disabled = isFull || isLocked;
+  }
+
+  if (scheduleSaveButton) {
+    scheduleSaveButton.disabled = isLocked;
+  }
+
+  if (scheduleResetButton) {
+    scheduleResetButton.disabled = isLocked;
   }
 }
 
@@ -508,16 +731,17 @@ if (scheduleManageDate) {
 }
 
 if (scheduleSaveButton) {
-  scheduleSaveButton.addEventListener("click", () => {
+  scheduleSaveButton.addEventListener("click", async () => {
     const dateKey = scheduleManageDate?.value;
     const status = getScheduleStatus();
+    let nextOverride;
 
     if (!dateKey) {
       return;
     }
 
     if (status === "full") {
-      teacherScheduleOverrides[dateKey] = { status: "full", slots: [] };
+      nextOverride = { status: "full", slots: [] };
     } else {
       const selectedHourlySlots = hourlySlotPicker
         ? Array.from(hourlySlotPicker.querySelectorAll("input:checked")).map((input) => input.value)
@@ -535,54 +759,218 @@ if (scheduleSaveButton) {
         return;
       }
 
-      teacherScheduleOverrides[dateKey] = { status: "open", slots };
+      nextOverride = { status: "open", slots };
     }
 
-    const saved = saveTeacherScheduleOverrides();
-    selectedScheduleDate = parseDateKey(dateKey);
-    visibleScheduleMonth = new Date(
-      selectedScheduleDate.getFullYear(),
-      selectedScheduleDate.getMonth(),
-      1
-    );
-    clearSelectedScheduleSlot();
-    renderSelectedDayAvailability();
-    renderAvailabilityCalendar();
-    renderScheduleManager(selectedScheduleDate);
-
     if (scheduleManagerStatus) {
-      scheduleManagerStatus.textContent = saved
-        ? "บันทึกตารางแล้ว"
-        : "บันทึกในเครื่องไม่ได้ แต่ตารางถูกอัปเดตในหน้านี้แล้ว";
+      scheduleManagerStatus.textContent = canSaveScheduleToSupabase()
+        ? "กำลังบันทึกลง Supabase..."
+        : "กำลังบันทึกลงเครื่องนี้...";
+    }
+
+    if (scheduleSaveButton) {
+      scheduleSaveButton.disabled = true;
+    }
+
+    try {
+      const savedMode = await saveScheduleOverride(dateKey, nextOverride);
+      selectedScheduleDate = parseDateKey(dateKey);
+      visibleScheduleMonth = new Date(
+        selectedScheduleDate.getFullYear(),
+        selectedScheduleDate.getMonth(),
+        1
+      );
+      clearSelectedScheduleSlot();
+      renderSelectedDayAvailability();
+      renderAvailabilityCalendar();
+      renderScheduleManager(selectedScheduleDate);
+
+      if (scheduleManagerStatus) {
+        scheduleManagerStatus.textContent =
+          savedMode === "supabase"
+            ? "บันทึกตารางลง Supabase แล้ว"
+            : savedMode === "local"
+              ? "บันทึกตารางในเครื่องนี้แล้ว"
+              : "บันทึกในเครื่องไม่ได้ แต่ตารางถูกอัปเดตในหน้านี้แล้ว";
+      }
+    } catch (error) {
+      if (scheduleManagerStatus) {
+        scheduleManagerStatus.textContent = `ยังบันทึกไม่สำเร็จ: ${error.message || "กรุณาเช็กสิทธิ์ครูใน Supabase"}`;
+      }
+    } finally {
+      updateScheduleManagerDisabledState();
     }
   });
 }
 
 if (scheduleResetButton) {
-  scheduleResetButton.addEventListener("click", () => {
+  scheduleResetButton.addEventListener("click", async () => {
     const dateKey = scheduleManageDate?.value;
 
     if (!dateKey) {
       return;
     }
 
-    delete teacherScheduleOverrides[dateKey];
-    saveTeacherScheduleOverrides();
-    selectedScheduleDate = parseDateKey(dateKey);
-    clearSelectedScheduleSlot();
+    if (scheduleManagerStatus) {
+      scheduleManagerStatus.textContent = canSaveScheduleToSupabase()
+        ? "กำลังลบ override ใน Supabase..."
+        : "กำลังกลับไปใช้ค่าเริ่มต้น...";
+    }
+
+    if (scheduleResetButton) {
+      scheduleResetButton.disabled = true;
+    }
+
+    try {
+      const resetMode = await resetScheduleOverride(dateKey);
+      selectedScheduleDate = parseDateKey(dateKey);
+      clearSelectedScheduleSlot();
+      renderSelectedDayAvailability();
+      renderAvailabilityCalendar();
+      renderScheduleManager(selectedScheduleDate);
+
+      if (scheduleManagerStatus) {
+        scheduleManagerStatus.textContent =
+          resetMode === "supabase"
+            ? "ลบ override ใน Supabase แล้ว และกลับไปใช้ค่าเริ่มต้น"
+            : "กลับไปใช้ค่าเริ่มต้นแล้ว";
+      }
+    } catch (error) {
+      if (scheduleManagerStatus) {
+        scheduleManagerStatus.textContent = `ยังกลับไปใช้ค่าเริ่มต้นไม่ได้: ${error.message || "กรุณาเช็ก delete policy"}`;
+      }
+    } finally {
+      updateScheduleManagerDisabledState();
+    }
+  });
+}
+
+if (teacherLoginButton) {
+  teacherLoginButton.addEventListener("click", async () => {
+    if (!supabaseClient) {
+      updateTeacherAuthStatus("ยังโหลด Supabase client ไม่สำเร็จ กรุณาเช็กอินเทอร์เน็ตหรือ CDN");
+      return;
+    }
+
+    const email = teacherLoginEmail?.value.trim();
+    const password = teacherLoginPassword?.value || "";
+
+    if (!email || !password) {
+      updateTeacherAuthStatus("กรุณากรอกอีเมลและรหัสผ่านครู");
+      return;
+    }
+
+    teacherLoginButton.disabled = true;
+    updateTeacherAuthStatus("กำลังเข้าสู่ระบบ...");
+
+    const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+    if (error) {
+      teacherLoginButton.disabled = false;
+      updateTeacherAuthStatus(`เข้าสู่ระบบไม่สำเร็จ: ${error.message}`);
+      return;
+    }
+
+    teacherAuthSession = data.session;
+    await loadTeacherProfile(teacherAuthSession);
+    renderTeacherAuthState();
+    updateTeacherAuthStatus("");
+    teacherLoginButton.disabled = false;
+    maybeRedirectTeacherAfterLogin();
+  });
+}
+
+if (teacherLogoutButton) {
+  teacherLogoutButton.addEventListener("click", async () => {
+    if (supabaseClient) {
+      await supabaseClient.auth.signOut();
+    }
+    teacherAuthSession = null;
+    teacherProfile = null;
+    renderTeacherAuthState();
+    updateTeacherAuthStatus("ออกจากระบบครูแล้ว");
+
+    const redirect = teacherLogoutButton.dataset.logoutRedirect;
+    if (redirect && window.location.pathname.endsWith("teacher-schedule.html")) {
+      window.location.href = redirect;
+    }
+  });
+}
+
+async function initializeTeacherAuthOnly() {
+  if (!teacherLoginButton && !teacherLogoutButton && !teacherSessionBar) {
+    return;
+  }
+
+  renderTeacherAuthState();
+
+  if (!supabaseClient) {
+    updateTeacherAuthStatus("ยังโหลด Supabase client ไม่สำเร็จ กรุณาเช็กอินเทอร์เน็ตหรือ CDN");
+    return;
+  }
+
+  await refreshTeacherSession();
+  maybeRedirectTeacherAfterLogin();
+
+  supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+    teacherAuthSession = session;
+    if (session) {
+      await loadTeacherProfile(session);
+    } else {
+      teacherProfile = null;
+    }
+    renderTeacherAuthState();
+  });
+}
+
+async function initializeSupabaseSchedule() {
+  if (!availabilityCalendar) {
+    return;
+  }
+
+  renderTeacherAuthState();
+
+  if (!supabaseClient) {
+    setScheduleConnectionStatus("ยังไม่ได้โหลด Supabase client จึงใช้ตารางตัวอย่างและ localStorage ชั่วคราว", "warning");
+    return;
+  }
+
+  try {
+    await refreshTeacherSession();
+    await loadSupabaseSchedule();
     renderSelectedDayAvailability();
     renderAvailabilityCalendar();
     renderScheduleManager(selectedScheduleDate);
 
-    if (scheduleManagerStatus) {
-      scheduleManagerStatus.textContent = "กลับไปใช้ค่าเริ่มต้นแล้ว";
-    }
-  });
+    supabaseClient.auth.onAuthStateChange(async (_event, session) => {
+      teacherAuthSession = session;
+      if (session) {
+        await loadTeacherProfile(session);
+      } else {
+        teacherProfile = null;
+      }
+      renderTeacherAuthState();
+    });
+  } catch (error) {
+    scheduleUsesSupabase = false;
+    teacherScheduleOverrides = loadTeacherScheduleOverrides();
+    setScheduleConnectionStatus(
+      `ยังเชื่อม Supabase ไม่สำเร็จ จึงใช้ตารางตัวอย่างก่อน: ${error.message || "กรุณาเช็ก RLS policy"}`,
+      "error"
+    );
+    renderSelectedDayAvailability();
+    renderAvailabilityCalendar();
+    renderScheduleManager(selectedScheduleDate);
+  }
 }
 
 renderSelectedDayAvailability();
 renderAvailabilityCalendar();
 renderScheduleManager(selectedScheduleDate);
+initializeSupabaseSchedule();
+if (!availabilityCalendar) {
+  initializeTeacherAuthOnly();
+}
 
 const courseSearch = document.getElementById("courseSearch");
 const courseCards = Array.from(document.querySelectorAll("[data-course-card]"));
