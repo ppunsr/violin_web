@@ -74,6 +74,13 @@ function bindApplicationForm(formId, statusId) {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const endpoint = form.getAttribute("action") || "";
+    const preferredTimeValue = form.querySelector("#preferredTimeInput")?.value.trim();
+
+    if (!preferredTimeValue) {
+      status.textContent = "กรุณาเลือกวันที่และเวลาเรียนจากตารางก่อนส่งใบสมัคร";
+      document.getElementById("schedule")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
 
     if (isPlaceholderFormEndpoint(endpoint)) {
       status.textContent = "ฟอร์มพร้อมใช้งานแล้ว เหลือใส่ Formspree endpoint จริงใน action ของ applyForm";
@@ -138,6 +145,12 @@ const scheduleSaveButton = document.getElementById("scheduleSaveButton");
 const scheduleResetButton = document.getElementById("scheduleResetButton");
 const scheduleManagerStatus = document.getElementById("scheduleManagerStatus");
 const scheduleConnectionStatus = document.getElementById("scheduleConnectionStatus");
+const bulkStartDate = document.getElementById("bulkStartDate");
+const bulkEndDate = document.getElementById("bulkEndDate");
+const bulkWeekdayPicker = document.getElementById("bulkWeekdayPicker");
+const bulkWeekdayInputs = Array.from(document.querySelectorAll("#bulkWeekdayPicker input"));
+const bulkScheduleSaveButton = document.getElementById("bulkScheduleSaveButton");
+const bulkScheduleStatus = document.getElementById("bulkScheduleStatus");
 const teacherAuthCard = document.getElementById("teacherAuthCard");
 const teacherLoginEmail = document.getElementById("teacherLoginEmail");
 const teacherLoginPassword = document.getElementById("teacherLoginPassword");
@@ -217,6 +230,10 @@ function formatDateKey(date) {
 function parseDateKey(dateKey) {
   const [year, month, day] = dateKey.split("-").map(Number);
   return new Date(year, month - 1, day);
+}
+
+function addDays(date, days) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
 }
 
 function normalizeScheduleSlots(slots) {
@@ -383,21 +400,25 @@ function canSaveScheduleToSupabase() {
 }
 
 async function saveScheduleOverride(dateKey, override) {
-  teacherScheduleOverrides[dateKey] = override;
+  return saveScheduleOverrides([dateKey], override);
+}
+
+async function saveScheduleOverrides(dateKeys, override) {
+  dateKeys.forEach((dateKey) => {
+    teacherScheduleOverrides[dateKey] = override;
+  });
 
   if (canSaveScheduleToSupabase()) {
+    const rows = dateKeys.map((dateKey) => ({
+      date: dateKey,
+      status: override.status,
+      slots: override.slots || [],
+      updated_by: teacherAuthSession.user.id,
+      updated_at: new Date().toISOString()
+    }));
     const { error } = await supabaseClient
       .from("teacher_availability")
-      .upsert(
-        {
-          date: dateKey,
-          status: override.status,
-          slots: override.slots || [],
-          updated_by: teacherAuthSession.user.id,
-          updated_at: new Date().toISOString()
-        },
-        { onConflict: "date" }
-      );
+      .upsert(rows, { onConflict: "date" });
 
     if (error) {
       throw error;
@@ -449,6 +470,32 @@ function getScheduleStatus() {
   return scheduleStatusButtons.find((button) => button.classList.contains("is-active"))?.dataset.scheduleStatus || "open";
 }
 
+function getScheduleOverrideFromEditor(statusElement = scheduleManagerStatus) {
+  const status = getScheduleStatus();
+
+  if (status === "full") {
+    return { status: "full", slots: [] };
+  }
+
+  const selectedHourlySlots = hourlySlotPicker
+    ? Array.from(hourlySlotPicker.querySelectorAll("input:checked")).map((input) => input.value)
+    : [];
+  const customSlots = (customSlotInput?.value || "")
+    .split(",")
+    .map((slot) => slot.trim())
+    .filter(Boolean) || [];
+  const slots = normalizeScheduleSlots([...selectedHourlySlots, ...customSlots]);
+
+  if (!slots.length) {
+    if (statusElement) {
+      statusElement.textContent = "เลือกอย่างน้อย 1 ช่วงเวลา หรือเปลี่ยนสถานะเป็นเต็ม";
+    }
+    return null;
+  }
+
+  return { status: "open", slots };
+}
+
 function isScheduleEditorLocked() {
   return Boolean(supabaseClient && !canSaveScheduleToSupabase());
 }
@@ -482,6 +529,22 @@ function updateScheduleManagerDisabledState() {
 
   if (scheduleResetButton) {
     scheduleResetButton.disabled = isLocked;
+  }
+
+  if (bulkStartDate) {
+    bulkStartDate.disabled = isLocked;
+  }
+
+  if (bulkEndDate) {
+    bulkEndDate.disabled = isLocked;
+  }
+
+  bulkWeekdayInputs.forEach((input) => {
+    input.disabled = isLocked;
+  });
+
+  if (bulkScheduleSaveButton) {
+    bulkScheduleSaveButton.disabled = isLocked;
   }
 }
 
@@ -538,6 +601,66 @@ function renderScheduleManager(date = selectedScheduleDate) {
   if (scheduleManagerStatus) {
     scheduleManagerStatus.textContent = "";
   }
+}
+
+function initializeBulkScheduleDefaults(date = selectedScheduleDate) {
+  if (!bulkStartDate || !bulkEndDate || !bulkWeekdayInputs.length) {
+    return;
+  }
+
+  if (!bulkStartDate.value) {
+    bulkStartDate.value = formatDateKey(date);
+  }
+
+  if (!bulkEndDate.value) {
+    bulkEndDate.value = formatDateKey(addDays(date, 28));
+  }
+
+  if (!bulkWeekdayInputs.some((input) => input.checked)) {
+    const selectedWeekday = String(date.getDay());
+    bulkWeekdayInputs.forEach((input) => {
+      input.checked = input.value === selectedWeekday;
+    });
+  }
+}
+
+function getBulkScheduleDateKeys() {
+  if (!bulkStartDate?.value || !bulkEndDate?.value) {
+    return { error: "เลือกวันที่เริ่มต้นและวันที่สิ้นสุดก่อน" };
+  }
+
+  const startDate = parseDateKey(bulkStartDate.value);
+  const endDate = parseDateKey(bulkEndDate.value);
+  const selectedWeekdays = bulkWeekdayInputs
+    .filter((input) => input.checked)
+    .map((input) => Number(input.value));
+
+  if (endDate < startDate) {
+    return { error: "วันที่สิ้นสุดต้องไม่มาก่อนวันที่เริ่มต้น" };
+  }
+
+  if (!selectedWeekdays.length) {
+    return { error: "เลือกวันในสัปดาห์อย่างน้อย 1 วัน" };
+  }
+
+  const totalDays = Math.round((endDate - startDate) / 86400000) + 1;
+  if (totalDays > 120) {
+    return { error: "เลือกช่วงได้ไม่เกิน 120 วันต่อครั้ง เพื่อป้องกันการบันทึกผิดพลาด" };
+  }
+
+  const dateKeys = [];
+  for (let index = 0; index < totalDays; index += 1) {
+    const date = addDays(startDate, index);
+    if (selectedWeekdays.includes(date.getDay())) {
+      dateKeys.push(formatDateKey(date));
+    }
+  }
+
+  if (!dateKeys.length) {
+    return { error: "ช่วงวันที่นี้ไม่มีวันในสัปดาห์ที่เลือก" };
+  }
+
+  return { dateKeys };
 }
 
 function clearSelectedScheduleSlot() {
@@ -693,7 +816,7 @@ scheduleMonthButtons.forEach((button) => {
 });
 
 if (scheduleApplyLink) {
-  scheduleApplyLink.addEventListener("click", () => {
+  scheduleApplyLink.addEventListener("click", (event) => {
     if (selectedScheduleSlot) {
       return;
     }
@@ -701,6 +824,12 @@ if (scheduleApplyLink) {
     const firstAvailableSlot = getAvailableSlotsForDate(selectedScheduleDate)[0];
     if (firstAvailableSlot) {
       setSelectedScheduleSlot(firstAvailableSlot);
+      return;
+    }
+
+    event.preventDefault();
+    if (selectedSlotNote) {
+      selectedSlotNote.textContent = "วันนั้นยังไม่มีช่วงว่าง กรุณาเลือกวันสีเขียวก่อนสมัครเรียน";
     }
   });
 }
@@ -733,33 +862,10 @@ if (scheduleManageDate) {
 if (scheduleSaveButton) {
   scheduleSaveButton.addEventListener("click", async () => {
     const dateKey = scheduleManageDate?.value;
-    const status = getScheduleStatus();
-    let nextOverride;
+    const nextOverride = getScheduleOverrideFromEditor(scheduleManagerStatus);
 
-    if (!dateKey) {
+    if (!dateKey || !nextOverride) {
       return;
-    }
-
-    if (status === "full") {
-      nextOverride = { status: "full", slots: [] };
-    } else {
-      const selectedHourlySlots = hourlySlotPicker
-        ? Array.from(hourlySlotPicker.querySelectorAll("input:checked")).map((input) => input.value)
-        : [];
-      const customSlots = (customSlotInput?.value || "")
-        .split(",")
-        .map((slot) => slot.trim())
-        .filter(Boolean) || [];
-      const slots = normalizeScheduleSlots([...selectedHourlySlots, ...customSlots]);
-
-      if (!slots.length) {
-        if (scheduleManagerStatus) {
-          scheduleManagerStatus.textContent = "เลือกอย่างน้อย 1 ช่วงเวลา หรือเปลี่ยนสถานะเป็นเต็ม";
-        }
-        return;
-      }
-
-      nextOverride = { status: "open", slots };
     }
 
     if (scheduleManagerStatus) {
@@ -796,6 +902,61 @@ if (scheduleSaveButton) {
     } catch (error) {
       if (scheduleManagerStatus) {
         scheduleManagerStatus.textContent = `ยังบันทึกไม่สำเร็จ: ${error.message || "กรุณาเช็กสิทธิ์ครูใน Supabase"}`;
+      }
+    } finally {
+      updateScheduleManagerDisabledState();
+    }
+  });
+}
+
+if (bulkScheduleSaveButton) {
+  bulkScheduleSaveButton.addEventListener("click", async () => {
+    const nextOverride = getScheduleOverrideFromEditor(bulkScheduleStatus);
+    const { dateKeys, error } = getBulkScheduleDateKeys();
+
+    if (!nextOverride) {
+      return;
+    }
+
+    if (error) {
+      if (bulkScheduleStatus) {
+        bulkScheduleStatus.textContent = error;
+      }
+      return;
+    }
+
+    if (bulkScheduleStatus) {
+      bulkScheduleStatus.textContent = canSaveScheduleToSupabase()
+        ? `กำลังบันทึก ${dateKeys.length} วันลง Supabase...`
+        : `กำลังบันทึก ${dateKeys.length} วันลงเครื่องนี้...`;
+    }
+
+    bulkScheduleSaveButton.disabled = true;
+
+    try {
+      const savedMode = await saveScheduleOverrides(dateKeys, nextOverride);
+      selectedScheduleDate = parseDateKey(dateKeys[0]);
+      visibleScheduleMonth = new Date(
+        selectedScheduleDate.getFullYear(),
+        selectedScheduleDate.getMonth(),
+        1
+      );
+      clearSelectedScheduleSlot();
+      renderSelectedDayAvailability();
+      renderAvailabilityCalendar();
+      renderScheduleManager(selectedScheduleDate);
+
+      if (bulkScheduleStatus) {
+        bulkScheduleStatus.textContent =
+          savedMode === "supabase"
+            ? `บันทึก ${dateKeys.length} วันลง Supabase แล้ว`
+            : savedMode === "local"
+              ? `บันทึก ${dateKeys.length} วันในเครื่องนี้แล้ว`
+              : `บันทึก ${dateKeys.length} วันในหน้านี้แล้ว`;
+      }
+    } catch (saveError) {
+      if (bulkScheduleStatus) {
+        bulkScheduleStatus.textContent = `ยังบันทึกหลายวันไม่สำเร็จ: ${saveError.message || "กรุณาเช็กสิทธิ์ครูใน Supabase"}`;
       }
     } finally {
       updateScheduleManagerDisabledState();
@@ -967,6 +1128,7 @@ async function initializeSupabaseSchedule() {
 renderSelectedDayAvailability();
 renderAvailabilityCalendar();
 renderScheduleManager(selectedScheduleDate);
+initializeBulkScheduleDefaults(selectedScheduleDate);
 initializeSupabaseSchedule();
 if (!availabilityCalendar) {
   initializeTeacherAuthOnly();

@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Noto+Serif+Thai:wght@600;700&display=swap"
       rel="stylesheet"
     >
-    <link rel="stylesheet" href="styles.css?v=supabase-schedule-2">
+    <link rel="stylesheet" href="styles.css?v=apply-schedule-first-3">
   </head>
   <body class="portal-page teacher-admin-page teacher-schedule-page">
     <header class="site-header">
@@ -142,6 +142,40 @@
                 <button class="button button-ghost-light" type="button" id="scheduleResetButton">ใช้ค่าเริ่มต้น</button>
               </div>
               <p class="schedule-manager-status" id="scheduleManagerStatus" role="status" aria-live="polite"></p>
+
+              <section class="bulk-schedule-card" aria-labelledby="bulkScheduleTitle">
+                <div>
+                  <p class="section-kicker">Bulk update</p>
+                  <h3 id="bulkScheduleTitle">ตั้งหลายวันด้วยเวลาเดียวกัน</h3>
+                  <p>ใช้สถานะและช่วงเวลาจากช่องด้านบน แล้วเลือกช่วงวันที่กับวันในสัปดาห์ที่ต้องการบันทึก</p>
+                </div>
+
+                <div class="bulk-date-grid">
+                  <label>
+                    เริ่มวันที่
+                    <input type="date" id="bulkStartDate">
+                  </label>
+                  <label>
+                    ถึงวันที่
+                    <input type="date" id="bulkEndDate">
+                  </label>
+                </div>
+
+                <div class="bulk-weekday-picker" id="bulkWeekdayPicker" aria-label="เลือกวันในสัปดาห์">
+                  <label><input type="checkbox" value="1"><span>จันทร์</span></label>
+                  <label><input type="checkbox" value="2"><span>อังคาร</span></label>
+                  <label><input type="checkbox" value="3"><span>พุธ</span></label>
+                  <label><input type="checkbox" value="4"><span>พฤหัส</span></label>
+                  <label><input type="checkbox" value="5"><span>ศุกร์</span></label>
+                  <label><input type="checkbox" value="6"><span>เสาร์</span></label>
+                  <label><input type="checkbox" value="0"><span>อาทิตย์</span></label>
+                </div>
+
+                <div class="bulk-schedule-actions">
+                  <button class="button button-primary" type="button" id="bulkScheduleSaveButton">บันทึกหลายวัน</button>
+                  <p class="bulk-schedule-status" id="bulkScheduleStatus" role="status" aria-live="polite"></p>
+                </div>
+              </section>
             </div>
           </section>
         </div>
@@ -149,6 +183,6 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js?v=supabase-schedule-2"></script>
+    <script src="script.js?v=apply-schedule-first-3"></script>
   </body>
 </html>

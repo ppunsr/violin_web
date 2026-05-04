@@ -6,7 +6,8 @@
 
 - เปลี่ยนชื่อโรงเรียนใน `index.html` และ `online-course.html`
 - ใช้ Facebook Page หลักที่ `https://www.facebook.com/profile.php?id=61561505157841`, LINE ID `pun1852` และเปลี่ยน `hello@yourviolinschool.com`, `+66 00 000 0000` เป็นช่องทางจริงของคุณ
-- ฟอร์มสมัครเรียนส่งผ่าน Formspree endpoint `https://formspree.io/f/xwvajdvg` แล้ว
+- ฟอร์มสมัครเรียนส่งผ่าน Formspree endpoint `https://formspree.io/f/xwvajdvg` แล้ว และปุ่มสมัครจะพาไปเลือกวันที่/เวลาในตารางก่อนแนบ `preferredTime` ไปกับใบสมัคร
+- หัวข้อคอร์สเรียนมีตัวเลือก `เรียนออนไลน์ตัวต่อตัวผ่าน Google Meet` และฟอร์มสมัครมี option นี้แล้ว
 - เปลี่ยน `assets/hero-violin-school.png` เป็นรูปครูหรือสตูดิโอจริงเมื่อพร้อม
 - เปลี่ยนรูปโปรไฟล์ผู้สอน 3 รูปใน `assets/profile/` ได้ โดยใช้ชื่อไฟล์เดิม
 - เปลี่ยนภาพบรรยากาศการเรียน 6 รูปใน `assets/gallery/` ได้ โดยใช้ชื่อไฟล์เดิม
@@ -29,6 +30,7 @@ https://zouaheonywnpygxageyl.supabase.co
 
 - `teacher-login.html` สำหรับเข้าสู่ระบบครู
 - `teacher-schedule.html` สำหรับจัดการวันว่าง วันเต็ม และช่วงเวลา
+- ใน `teacher-schedule.html` ครูสามารถตั้งหลายวันพร้อมกันได้ โดยเลือกช่วงวันที่ วันในสัปดาห์ และใช้ช่วงเวลาเดียวกับ editor ด้านบน
 
 ถ้ายังไม่ได้ตั้ง policy ให้ครบ ให้รัน SQL ใน `supabase-schedule-policies.sql` หรือใช้ชุดนี้ใน Supabase SQL Editor:
 

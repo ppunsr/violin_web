@@ -668,7 +668,7 @@ textarea {
 
 .course-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
   margin-top: 22px;
 }
@@ -684,6 +684,17 @@ textarea {
 .course-muted {
   background: #eef4f2;
   border-color: rgba(17, 94, 89, 0.18);
+}
+
+.course-live-online {
+  background:
+    linear-gradient(145deg, rgba(17, 94, 89, 0.1), transparent 52%),
+    var(--white);
+  border-color: rgba(17, 94, 89, 0.18);
+}
+
+.course-live-online .course-label {
+  color: var(--teal);
 }
 
 .process-section {
@@ -1216,7 +1227,8 @@ textarea {
 
 .custom-slot-field,
 .schedule-manager-actions,
-.schedule-manager-status {
+.schedule-manager-status,
+.bulk-schedule-card {
   grid-column: 1 / -1;
 }
 
@@ -1236,6 +1248,101 @@ textarea {
   color: var(--wine);
   font-size: 13px;
   font-weight: 800;
+}
+
+.bulk-schedule-card {
+  display: grid;
+  gap: 14px;
+  margin-top: 6px;
+  padding: 18px;
+  border: 1px solid rgba(16, 17, 20, 0.08);
+  border-radius: 14px;
+  background: rgba(247, 243, 236, 0.78);
+}
+
+.bulk-schedule-card h3 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.bulk-schedule-card p:not(.section-kicker),
+.bulk-schedule-status {
+  margin: 6px 0 0;
+  color: rgba(16, 17, 20, 0.62);
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.6;
+}
+
+.bulk-date-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.bulk-date-grid label {
+  display: grid;
+  gap: 7px;
+  color: rgba(16, 17, 20, 0.66);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.bulk-date-grid input {
+  min-height: 44px;
+  border: 1px solid rgba(16, 17, 20, 0.12);
+  border-radius: 10px;
+  padding: 0 12px;
+  background: var(--white);
+  color: var(--ink);
+  font: inherit;
+}
+
+.bulk-weekday-picker {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.bulk-weekday-picker label {
+  display: grid;
+  gap: 8px;
+  place-items: center;
+  min-height: 58px;
+  padding: 8px 6px;
+  border: 1px solid rgba(16, 17, 20, 0.08);
+  border-radius: 10px;
+  background: var(--white);
+  color: rgba(16, 17, 20, 0.68);
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.bulk-weekday-picker input {
+  margin: 0;
+  accent-color: var(--teal);
+}
+
+.bulk-weekday-picker label:has(input:checked) {
+  border-color: rgba(52, 178, 114, 0.36);
+  background: #e8f6ee;
+  color: #12633f;
+}
+
+.bulk-schedule-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.bulk-schedule-status {
+  min-height: 22px;
+  margin: 0;
+  color: var(--wine);
 }
 
 .teacher-admin-page {
@@ -1598,6 +1705,28 @@ textarea {
   font-weight: 800;
 }
 
+.schedule-required-note {
+  display: grid;
+  gap: 7px;
+  margin-top: 24px;
+  padding: 16px;
+  border: 1px solid rgba(199, 154, 70, 0.34);
+  border-radius: var(--radius);
+  background: rgba(199, 154, 70, 0.1);
+}
+
+.schedule-required-note strong,
+.schedule-required-note a {
+  color: var(--brass);
+  font-weight: 900;
+}
+
+.schedule-required-note span {
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
 .apply-form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1649,8 +1778,17 @@ textarea {
 
 .full-field,
 .form-submit,
-.form-status {
+.form-status,
+.schedule-change-link {
   grid-column: 1 / -1;
+}
+
+.schedule-change-link {
+  width: fit-content;
+  color: var(--brass);
+  font-size: 13px;
+  font-weight: 900;
+  border-bottom: 1px solid currentColor;
 }
 
 .form-status {
@@ -3349,6 +3487,18 @@ textarea {
 
   .teacher-admin-edit-card {
     padding: 18px;
+  }
+
+  .bulk-date-grid,
+  .bulk-weekday-picker {
+    grid-template-columns: 1fr;
+  }
+
+  .bulk-weekday-picker label {
+    display: flex;
+    justify-content: flex-start;
+    min-height: 44px;
+    padding: 0 12px;
   }
 
   .teacher-auth-card {
