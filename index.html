@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Noto+Serif+Thai:wght@600;700&display=swap"
       rel="stylesheet"
     >
-    <link rel="stylesheet" href="styles.css?v=apply-schedule-first-3">
+    <link rel="stylesheet" href="styles.css?v=formspree-xaqvbrvr-1">
   </head>
   <body>
     <header class="site-header">
@@ -245,14 +245,17 @@
           </article>
 
           <div class="course-grid" aria-label="คอร์สเพิ่มเติม">
-            <article class="course-card">
-              <p class="course-label">คอร์สสตูดิโอ</p>
+            <article class="course-card course-studio-full">
+              <div class="course-card-top">
+                <p class="course-label">คอร์สสตูดิโอ</p>
+                <span class="course-status-pill is-full">เต็ม</span>
+              </div>
               <h3>คลาสสตูดิโอ</h3>
               <p>
                 พื้นที่เรียนรู้แบบสตูดิโอสำหรับการแสดงกลุ่ม การฝึกฟัง นิสัยการเล่นร่วมกับผู้อื่น
-                และการเตรียมการแสดง
+                และการเตรียมการแสดง ตอนนี้ยังไม่เปิดรับสมัครเพิ่มเติม
               </p>
-              <a class="text-link" href="#schedule">สอบถามคลาสสตูดิโอ</a>
+              <span class="course-closed-note">เต็มตลอด / ยังไม่เปิดรับสมัคร</span>
             </article>
 
             <article class="course-card course-live-online">
@@ -401,10 +404,10 @@
                 <strong>+66 00 000 0000</strong>
                 <small>โทรสอบถามเวลาเรียนและคอร์สส่วนตัว</small>
               </a>
-              <a class="contact-card" href="mailto:hello@yourviolinschool.com">
+              <a class="contact-card" href="mailto:kruohmviolin@gmail.com">
                 <span class="contact-icon">@</span>
                 <span class="contact-label">อีเมล</span>
-                <strong>hello@yourviolinschool.com</strong>
+                <strong>kruohmviolin@gmail.com</strong>
                 <small>ส่งประวัติหรือวิดีโอการเล่นเพื่อประเมิน</small>
               </a>
             </div>
@@ -435,7 +438,7 @@
           <form
             class="apply-form"
             id="applyForm"
-            action="https://formspree.io/f/xwvajdvg"
+            action="https://formspree.io/f/xaqvbrvr"
             method="POST"
           >
             <input type="hidden" name="_subject" value="ใบสมัครเรียนไวโอลินจากเว็บไซต์">
@@ -458,7 +461,6 @@
               คอร์สที่สนใจ
               <select name="course" required>
                 <option>คอร์สไวโอลินส่วนตัว</option>
-                <option>คลาสสตูดิโอ</option>
                 <option>เรียนออนไลน์ตัวต่อตัวผ่าน Google Meet</option>
                 <option>คอร์สวิดีโอออนไลน์</option>
               </select>
@@ -507,6 +509,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js?v=apply-schedule-first-3"></script>
+    <script src="script.js?v=formspree-xaqvbrvr-1"></script>
   </body>
 </html>

@@ -5,9 +5,10 @@
 ## สิ่งที่ควรแก้ก่อนใช้งานจริง
 
 - เปลี่ยนชื่อโรงเรียนใน `index.html` และ `online-course.html`
-- ใช้ Facebook Page หลักที่ `https://www.facebook.com/profile.php?id=61561505157841`, LINE ID `pun1852` และเปลี่ยน `hello@yourviolinschool.com`, `+66 00 000 0000` เป็นช่องทางจริงของคุณ
-- ฟอร์มสมัครเรียนส่งผ่าน Formspree endpoint `https://formspree.io/f/xwvajdvg` แล้ว และปุ่มสมัครจะพาไปเลือกวันที่/เวลาในตารางก่อนแนบ `preferredTime` ไปกับใบสมัคร
+- ใช้ Facebook Page หลักที่ `https://www.facebook.com/profile.php?id=61561505157841`, LINE ID `pun1852`, อีเมล `kruohmviolin@gmail.com` และเปลี่ยน `+66 00 000 0000` เป็นเบอร์จริงของคุณ
+- ฟอร์มสมัครเรียนส่งผ่าน Formspree endpoint `https://formspree.io/f/xaqvbrvr` แล้ว และปุ่มสมัครจะพาไปเลือกวันที่/เวลาในตารางก่อนแนบ `preferredTime` ไปกับใบสมัคร
 - หัวข้อคอร์สเรียนมีตัวเลือก `เรียนออนไลน์ตัวต่อตัวผ่าน Google Meet` และฟอร์มสมัครมี option นี้แล้ว
+- `คลาสสตูดิโอ` แสดงสถานะเต็มตลอด และไม่ได้อยู่ใน dropdown สมัครเรียน
 - เปลี่ยน `assets/hero-violin-school.png` เป็นรูปครูหรือสตูดิโอจริงเมื่อพร้อม
 - เปลี่ยนรูปโปรไฟล์ผู้สอน 3 รูปใน `assets/profile/` ได้ โดยใช้ชื่อไฟล์เดิม
 - เปลี่ยนภาพบรรยากาศการเรียน 6 รูปใน `assets/gallery/` ได้ โดยใช้ชื่อไฟล์เดิม
@@ -100,6 +101,8 @@ using (
 insert into public.profiles (id, display_name, role)
 values ('USER_UID_ของครู', 'ครูโอม', 'teacher');
 ```
+
+บัญชีครูที่แนะนำให้ใช้ใน Supabase Auth คือ `kruohmviolin@gmail.com`
 
 ถ้า Supabase ยังเชื่อมไม่ได้ หน้าเว็บจะกลับไปใช้ตารางตัวอย่างและ localStorage ชั่วคราว
 
