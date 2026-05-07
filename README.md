@@ -5,14 +5,14 @@
 ## สิ่งที่ควรแก้ก่อนใช้งานจริง
 
 - เปลี่ยนชื่อโรงเรียนใน `index.html` และ `online-course.html`
-- ใช้ Facebook Page หลักที่ `https://www.facebook.com/profile.php?id=61561505157841`, LINE ID `pun1852`, อีเมล `kruohmviolin@gmail.com` และเปลี่ยน `+66 00 000 0000` เป็นเบอร์จริงของคุณ
+- ใช้ Facebook Page หลักที่ `https://www.facebook.com/profile.php?id=61561505157841`, LINE ID `pun1852`, อีเมล `kruohmviolin@gmail.com` และเบอร์โทร `0969962664`
 - ฟอร์มสมัครเรียนส่งผ่าน Formspree endpoint `https://formspree.io/f/xaqvbrvr` แล้ว และปุ่มสมัครจะพาไปเลือกวันที่/เวลาในตารางก่อนแนบ `preferredTime` ไปกับใบสมัคร
 - หัวข้อคอร์สเรียนมีตัวเลือก `เรียนออนไลน์ตัวต่อตัวผ่าน Google Meet` และฟอร์มสมัครมี option นี้แล้ว
 - `คลาสสตูดิโอ` แสดงสถานะเต็มตลอด และไม่ได้อยู่ใน dropdown สมัครเรียน
 - เปลี่ยน `assets/hero-violin-school.png` เป็นรูปครูหรือสตูดิโอจริงเมื่อพร้อม
-- เปลี่ยนรูปโปรไฟล์ผู้สอน 3 รูปใน `assets/profile/` ได้ โดยใช้ชื่อไฟล์เดิม
-- เปลี่ยนภาพบรรยากาศการเรียน 6 รูปใน `assets/gallery/` ได้ โดยใช้ชื่อไฟล์เดิม
-- เปลี่ยนวิดีโอ 3 ไฟล์ใน `videos/` เป็นคลิปจริง โดยใช้ชื่อไฟล์เดิมในโฟลเดอร์ `videos/`
+- รูปโปรไฟล์ผู้สอน 3 รูปใช้ไฟล์ `teacher-profile-ohm-01.jpeg`, `teacher-profile-ohm-02.jpeg`, `teacher-profile-ohm-03.jpeg` ใน `assets/profile/`
+- ภาพบรรยากาศการเรียน 6 รูปใช้ไฟล์ `learning-atmosphere-ohm-01.jpeg` ถึง `learning-atmosphere-ohm-06.jpeg` ใน `assets/gallery/`
+- วิดีโอประสบการณ์ในหน้าแรกใช้ thumbnail cards ที่กดเปิด YouTube: `Ws2KbFPrVKg`, `jD09wZ-Wpbo`, `8Evpzi5tBN8`
 
 ## ตารางเวลาครู + Supabase
 

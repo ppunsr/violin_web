@@ -519,14 +519,81 @@ textarea {
 }
 
 .video-frame {
+  position: relative;
   aspect-ratio: 16 / 10;
   background: #0f1014;
 }
 
-.video-frame video {
+.video-frame video,
+.video-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+}
+
+.youtube-video-link {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  color: var(--white);
+}
+
+.youtube-video-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(16, 17, 20, 0.02), rgba(16, 17, 20, 0.42)),
+    radial-gradient(circle at center, rgba(16, 17, 20, 0.04), rgba(16, 17, 20, 0.42));
+}
+
+.youtube-video-link img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: saturate(0.96) contrast(1.04);
+}
+
+.youtube-play-button {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  padding: 0 18px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  background: rgba(16, 17, 20, 0.74);
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 900;
+  backdrop-filter: blur(12px);
+}
+
+.youtube-play-button::before {
+  content: "";
+  width: 0;
+  height: 0;
+  margin-right: 9px;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+  border-left: 11px solid var(--brass);
+}
+
+.youtube-video-link:hover img,
+.youtube-video-link:focus-visible img {
+  transform: scale(1.04);
+}
+
+.youtube-video-link:focus-visible {
+  outline: 3px solid rgba(199, 154, 70, 0.7);
+  outline-offset: -3px;
 }
 
 .video-card-copy {
@@ -545,6 +612,18 @@ textarea {
   margin: 14px 0 0;
   color: rgba(255, 255, 255, 0.68);
   line-height: 1.65;
+}
+
+.youtube-fallback-link {
+  display: inline-flex;
+  width: fit-content;
+  min-height: 36px;
+  align-items: center;
+  margin-top: 16px;
+  color: var(--brass);
+  font-size: 13px;
+  font-weight: 900;
+  border-bottom: 1px solid currentColor;
 }
 
 .lesson-gallery-block {
