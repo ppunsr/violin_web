@@ -649,19 +649,79 @@ textarea {
   line-height: 1.16;
 }
 
-.lesson-gallery {
+.lesson-gallery-marquee {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
+  overflow: hidden;
 }
 
-.lesson-gallery img {
+.lesson-gallery-marquee::before,
+.lesson-gallery-marquee::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: min(72px, 10vw);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.lesson-gallery-marquee::before {
+  left: 0;
+  background: linear-gradient(90deg, rgba(16, 17, 20, 0.96), rgba(16, 17, 20, 0));
+}
+
+.lesson-gallery-marquee::after {
+  right: 0;
+  background: linear-gradient(270deg, rgba(16, 17, 20, 0.96), rgba(16, 17, 20, 0));
+}
+
+.lesson-gallery-row {
+  overflow: hidden;
+}
+
+.lesson-gallery-track {
+  display: flex;
+  gap: 18px;
+  width: max-content;
+  animation: lesson-gallery-scroll 34s linear infinite;
+  will-change: transform;
+}
+
+.lesson-gallery-row-reverse .lesson-gallery-track {
+  animation-direction: reverse;
+  animation-duration: 38s;
+}
+
+.lesson-gallery-card {
+  flex: 0 0 clamp(240px, 30vw, 360px);
+}
+
+.lesson-gallery-card img {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
   border-radius: var(--radius);
   border: 1px solid rgba(255, 255, 255, 0.12);
   filter: saturate(0.94) contrast(1.02);
+  display: block;
+}
+
+@keyframes lesson-gallery-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - 9px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lesson-gallery-track {
+    animation: none;
+  }
 }
 
 .courses-section {
@@ -3323,8 +3383,8 @@ textarea {
     display: block;
   }
 
-  .lesson-gallery {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .lesson-gallery-card {
+    flex-basis: clamp(220px, 46vw, 310px);
   }
 
   .course-private-panel {
@@ -3701,8 +3761,13 @@ textarea {
     grid-template-columns: 44px minmax(0, 1fr);
   }
 
-  .lesson-gallery {
-    grid-template-columns: 1fr;
+  .lesson-gallery-marquee::before,
+  .lesson-gallery-marquee::after {
+    width: 32px;
+  }
+
+  .lesson-gallery-card {
+    flex-basis: 248px;
   }
 
   .button {

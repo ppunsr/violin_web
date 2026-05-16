@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&family=Noto+Serif+Thai:wght@600;700&display=swap"
       rel="stylesheet"
     >
-    <link rel="stylesheet" href="styles.css?v=learning-gallery-photos-1">
+    <link rel="stylesheet" href="styles.css?v=learning-gallery-marquee-1">
   </head>
   <body>
     <header class="site-header">
@@ -208,13 +208,51 @@
               <p class="section-kicker">บรรยากาศการเรียน</p>
               <h3>ภาพจากคลาสเรียนและการเตรียมตัวของนักเรียน</h3>
             </div>
-            <div class="lesson-gallery" aria-label="ภาพบรรยากาศการเรียนไวโอลิน">
-              <img src="assets/gallery/learning-atmosphere-ohm-01.jpeg" alt="นักเรียนฝึกอ่านโน้ตและเล่นไวโอลินระหว่างคลาส">
-              <img src="assets/gallery/learning-atmosphere-ohm-02.jpeg" alt="ครูช่วยปรับตำแหน่งนิ้วและการจับคันชักให้นักเรียนเด็ก">
-              <img src="assets/gallery/learning-atmosphere-ohm-03.jpeg" alt="นักเรียนรับประกาศนียบัตรจากการแข่งขันดนตรี">
-              <img src="assets/gallery/learning-atmosphere-ohm-04.jpeg" alt="ครูโอมสอนท่าทางและคันชักระหว่างคลาสตัวต่อตัว">
-              <img src="assets/gallery/learning-atmosphere-ohm-05.jpeg" alt="ครูโอมแสดงร่วมกับนักเรียนบนเวที">
-              <img src="assets/gallery/learning-atmosphere-ohm-06.jpeg" alt="นักเรียนเด็กฝึกยกไวโอลินและเตรียมท่าทาง">
+            <div class="lesson-gallery-marquee" aria-label="ภาพบรรยากาศการเรียนไวโอลิน">
+              <div class="lesson-gallery-row">
+                <div class="lesson-gallery-track">
+                  <div class="lesson-gallery-card">
+                    <img src="assets/gallery/learning-atmosphere-ohm-01.jpeg" alt="นักเรียนฝึกอ่านโน้ตและเล่นไวโอลินระหว่างคลาส">
+                  </div>
+                  <div class="lesson-gallery-card">
+                    <img src="assets/gallery/learning-atmosphere-ohm-02.jpeg" alt="ครูช่วยปรับตำแหน่งนิ้วและการจับคันชักให้นักเรียนเด็ก">
+                  </div>
+                  <div class="lesson-gallery-card">
+                    <img src="assets/gallery/learning-atmosphere-ohm-03.jpeg" alt="นักเรียนรับประกาศนียบัตรจากการแข่งขันดนตรี">
+                  </div>
+                  <div class="lesson-gallery-card" aria-hidden="true">
+                    <img src="assets/gallery/learning-atmosphere-ohm-01.jpeg" alt="">
+                  </div>
+                  <div class="lesson-gallery-card" aria-hidden="true">
+                    <img src="assets/gallery/learning-atmosphere-ohm-02.jpeg" alt="">
+                  </div>
+                  <div class="lesson-gallery-card" aria-hidden="true">
+                    <img src="assets/gallery/learning-atmosphere-ohm-03.jpeg" alt="">
+                  </div>
+                </div>
+              </div>
+              <div class="lesson-gallery-row lesson-gallery-row-reverse">
+                <div class="lesson-gallery-track">
+                  <div class="lesson-gallery-card">
+                    <img src="assets/gallery/learning-atmosphere-ohm-04.jpeg" alt="ครูโอมสอนท่าทางและคันชักระหว่างคลาสตัวต่อตัว">
+                  </div>
+                  <div class="lesson-gallery-card">
+                    <img src="assets/gallery/learning-atmosphere-ohm-05.jpeg" alt="ครูโอมแสดงร่วมกับนักเรียนบนเวที">
+                  </div>
+                  <div class="lesson-gallery-card">
+                    <img src="assets/gallery/learning-atmosphere-ohm-06.jpeg" alt="นักเรียนเด็กฝึกยกไวโอลินและเตรียมท่าทาง">
+                  </div>
+                  <div class="lesson-gallery-card" aria-hidden="true">
+                    <img src="assets/gallery/learning-atmosphere-ohm-04.jpeg" alt="">
+                  </div>
+                  <div class="lesson-gallery-card" aria-hidden="true">
+                    <img src="assets/gallery/learning-atmosphere-ohm-05.jpeg" alt="">
+                  </div>
+                  <div class="lesson-gallery-card" aria-hidden="true">
+                    <img src="assets/gallery/learning-atmosphere-ohm-06.jpeg" alt="">
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -518,6 +556,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="script.js?v=learning-gallery-photos-1"></script>
+    <script src="script.js?v=learning-gallery-marquee-1"></script>
   </body>
 </html>
