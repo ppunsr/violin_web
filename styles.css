@@ -70,21 +70,59 @@ textarea {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   min-width: 0;
 }
 
 .brand-mark {
-  display: inline-grid;
-  place-items: center;
-  width: 42px;
-  height: 42px;
-  flex: 0 0 42px;
-  border: 1px solid rgba(199, 154, 70, 0.68);
-  color: var(--brass);
-  font-family: "Noto Serif Thai", Georgia, serif;
-  font-size: 24px;
-  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 62px;
+  flex: 0 0 62px;
+  position: relative;
+}
+
+.brand-mark svg {
+  width: 62px;
+  height: 62px;
+  overflow: visible;
+}
+
+.brand-mark::before {
+  content: "";
+  position: absolute;
+  inset: 8px 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(46, 168, 183, 0.18), rgba(46, 168, 183, 0));
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.brand-mark path {
+  fill: none;
+  stroke: #38aec0;
+  stroke-width: 4.4;
+  stroke-linecap: square;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 7px rgba(56, 174, 192, 0.16));
+}
+
+.brand-copy {
+  position: relative;
+  min-width: 0;
+  padding: 1px 10px 5px 0;
+}
+
+.brand-copy::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% + 1px);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(56, 174, 192, 0.72), rgba(232, 241, 244, 0.14));
 }
 
 .brand-name,
@@ -94,13 +132,16 @@ textarea {
 }
 
 .brand-name {
-  font-weight: 800;
-  font-size: 15px;
+  color: rgba(255, 255, 255, 0.96);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .brand-subtitle {
-  margin-top: 2px;
-  color: rgba(255, 255, 255, 0.72);
+  margin-top: 14px;
+  color: rgba(205, 225, 231, 0.8);
   font-size: 12px;
 }
 
@@ -3488,9 +3529,31 @@ textarea {
   }
 
   .brand-name {
-    max-width: 185px;
+    max-width: 172px;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 11px;
+  }
+
+  .brand-mark {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+  }
+
+  .brand-mark svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .brand-mark::before {
+    inset: 7px;
+  }
+
+  .brand-copy::after {
+    right: 0;
+    top: 100%;
+    opacity: 0.4;
   }
 
   .hero {
